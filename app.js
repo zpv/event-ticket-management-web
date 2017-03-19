@@ -69,7 +69,7 @@ app.get('/get-ticket', (req, res) => {
 })
 
 app.get('/scan-ticket', (req, res) => {
-	var id = req.query.code
+	var id = req.body.code
 
 	console.log(id)
 	if (!id){
@@ -110,7 +110,7 @@ app.get('/scan-ticket', (req, res) => {
 		  } else {
 		  	results.response = 0
 		  	results.msg = "Ticket does not exist."
-		  	
+
 		  }
 		  finish();
 	      return res.json(results);
