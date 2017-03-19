@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>LitTix</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/jumbotron-narrow.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">LitTix</h3>
+      </div>
+
+      <h1>{{event.name}}</h1>
+      <h3>Tickets at {{event.price}} each</h3>
+
+      <form action="/get-ticket">
+      First name: <input type="text" name="fname"><br>
+      Last name: <input type="text" name="lname"><br>
+
+      <input type="hidden" name="id" value="{{event.id}}">
+      <input type="submit" value="Submit">
+
+      </form>
+
+<!--
+      <div class="jumbotron" style="background-image: url(/img/bop.jpg);">
+        <h1>nwHacks Afterparty</h1>
+        <p class="lead">Featuring the most amazing speakers, get ready for the most LIT party of the year. RedBull, Soylent, and tons of caffiene.</br>Tickets starting at $14.99 each</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">Purchase Tickets</a></p>
+      </div>
+
+      <div class="jumbotron" style="background-image: url(/img/bop.jpg);">
+        <h1>nwHacks Afterparty Afterparty</h1>
+        <p class="lead">Right after the most lit party of the year comes the second most lit party. Featuring more RedBull and more Soylent.</br>
+        Tickets starting at $99.99 each.</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">Purchase Tickets</a></p>
+      </div>-->
+
+      <footer class="footer">
+        <p>&copy; 2017 LitTix, Inc.</p>
+      </footer>
+
+    </div> <!-- /container -->
+  </body>
+</html>
