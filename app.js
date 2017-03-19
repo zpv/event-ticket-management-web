@@ -50,9 +50,52 @@ app.use(bodyParser.urlencoded({
  */
 app.use(bodyParser.json());
 
-app.get('/', (request, response) => {  
-  response.render('home', {
-    name: request.query.code
+app.use('/', (req, res, next) => {
+	pg.connect(config, function (err, client, done) {
+
+
+		console.log("connecting wow")
+		var finish = function () {
+			done();
+			next();
+		};
+
+		if (err) {
+			console.error('could not connect to cockroachdb', err);
+			finish();
+		}
+
+		var query = client.query('SELECT * FROM events')
+
+
+		query.on('end', (result) => {
+			req.events = result.rows;
+			finish();
+		})
+	})
+})
+
+app.get('/', (req, res) => {  
+	req.events.forEach(function(i){
+		console.log(i)
+		i.price = ((i.price/100).toFixed( 2 ))
+		console.log(i.price)
+	})
+	res.render('home', {
+		id: req.query.id,
+		events: req.events
+	})
+})
+
+app.get('/get-events', (req, res) => {
+	res.json(req.events)
+})
+
+app.get('/purchase-tickets', (req, res) => {  
+	console.log(req.events)
+  res.render('purchase', {
+    id: req.query.id,
+    events: req.events
   })
 })
 
