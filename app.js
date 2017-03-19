@@ -47,12 +47,13 @@ app.get('/', (request, response) => {
 })
 
 app.get('/get-ticket', (req, res) => {
+
 	var doc = new PDFDocument({
 		size: [612.00,310.00]
 	})
 
-	var img = QRCode.toDataURL('CODElol your ticket sucks', (err, url) => {
-		doc.fontSize(25).text('Name: John Smith', 100, 80);
+	var img = QRCode.toDataURL('CODEedrftgyh', (err, url) => {
+		doc.fontSize(25).text('Name: Matt Zheng', 100, 80);
 		doc.image(url)
 		doc.end()
 		var stream = doc.pipe(res)
@@ -94,7 +95,7 @@ app.get('/scan-ticket', (req, res) => {
 
 	  query.on('end', (result) => {
 	  	ticket = result.rows[0];
-	  	finish();
+	  	
 	  	
 		var results = {};
 		if(ticket) {
@@ -104,13 +105,14 @@ app.get('/scan-ticket', (req, res) => {
 		  	} else {
 		  		results.response = 1
 		  		results.msg = "Ticket has been successfully registered."
-
+		  		client.query('UPDATE tickets SET used=true WHERE code=\'' + id + '\'')
 		  	}
 		  } else {
 		  	results.response = 0
 		  	results.msg = "Ticket does not exist."
+		  	
 		  }
-
+		  finish();
 	      return res.json(results);
 	    }
       );
