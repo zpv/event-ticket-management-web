@@ -2,6 +2,7 @@ const path = require('path')
 const express = require('express')  
 const exphbs = require('express-handlebars')
 const fs = require('fs')
+const bodyParser = require('body-parser')
 
 const async = require('async');
 const pg = require('pg');
@@ -40,6 +41,15 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+/**bodyParser.json(options)
+ * Parses the text as JSON and exposes the resulting object on req.body.
+ */
+app.use(bodyParser.json());
+
 app.get('/', (request, response) => {  
   response.render('home', {
     name: request.query.code
@@ -68,7 +78,7 @@ app.get('/get-ticket', (req, res) => {
 
 })
 
-app.get('/scan-ticket', (req, res) => {
+app.post('/scan-ticket', (req, res) => {
 	var id = req.body.code
 
 	console.log(id)
