@@ -138,6 +138,7 @@ app.get('/get-ticket', (req, res) => {
 	date.setUTCSeconds(e.date)
 
 	var img = QRCode.toDataURL('CODE' + code, (err, url) => {
+		doc.info.Title = e.name + " Printable Ticket - " + req.query.name 
 		doc.image('public/img/afterparty.png', -50, 100, {
 		   fit: [300, 300]
 		});
@@ -146,9 +147,9 @@ app.get('/get-ticket', (req, res) => {
 			fit: [150, 150]
 		})
 		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25)
-		.text('Event: nwHacks After Party', 40, 30)
+		.text(e.name, 40, 30)
    		.text('Date: ' + date.toLocaleString())
-   		.text('Ticketholder: Steven')
+   		.text('Ticketholder: ' + req.query.name)
 
    		//doc.font('public/fonts/OpenSans-Regular.ttf').fontSize(18).text('Admit one - General Admission', 200, 180)
 

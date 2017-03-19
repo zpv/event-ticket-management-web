@@ -1,6 +1,9 @@
-<h1>{{event.name}}</h1>
-<h3>Tickets at {{event.price}} each</h3>
+<div class="jumbotron whitewashed" style="background-image: url(/img/{{event.image}});">
 
+<h1>{{event.name}}</h1>
+<h3><b>Tickets at ${{event.price}} each</b></h3>
+
+</div>
 <form action="/get-ticket">
   <div class="form-group">
     <label for="usr">Name:</label>
@@ -8,6 +11,6 @@
   </div>
 
   <input type="hidden" name="id" value="{{event.id}}">
-  <input type="submit"  class="btn btn-primary"value="Submit">
+  <input type="submit" class="btn btn-primary" value="Purchase">
 
 </form>
