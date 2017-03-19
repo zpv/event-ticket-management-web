@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>LitTix</title>
+    <title>{{title}}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -30,18 +30,13 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation" class="active"><a href="/">Home</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">LitTix</h3>
       </div>
-      {{#each events}}
-      <div class="jumbotron" style="background-image: url(/img/{{this.image}});">
-        <h1>{{this.name}}</h1>
-        <p class="lead">{{this.description}}</br>Tickets starting at ${{this.price}} each</p>
-        <p><form action="/purchase-tickets"><button id="submit-{{@index}}" type="submit" name="id" value="{{this.id}}"class="btn btn-lg btn-success" href="#" role="button">Purchase Tickets</button></p></form>
-      </div>
-      {{/each}}
+      {{{body}}}
+
 <!--
       <div class="jumbotron" style="background-image: url(/img/bop.jpg);">
         <h1>nwHacks Afterparty</h1>

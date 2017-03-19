@@ -84,7 +84,8 @@ app.get('/', (req, res) => {
 
 	res.render('home', {
 		id: req.query.id,
-		events: req.events
+		events: req.events,
+		title: 'LitTix - Local Events'
 	})
 })
 
@@ -94,13 +95,13 @@ app.get('/get-events', (req, res) => {
 
 app.get('/purchase-tickets', (req, res) => {  
 	var e = req.events.find(function(s){
-		return s.id = req.query.id
+		return s.id == req.query.id
 	})
 
 	console.log(e)
-	res.render('home', {
+	res.render('purchase', {
 		event: e,
-		layout: 'purchase'
+		title: 'LitTix - Purchase ' + e.name + ' tickets'
 	})
 })
 
