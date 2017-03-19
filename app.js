@@ -17,6 +17,9 @@ const app = express()
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
+const session = require('express-session')  
+const RedisStore = require('connect-redis')(session)
+
 var config = {
   user: 'nwhacks',
   host: '35.161.247.157',
@@ -32,6 +35,13 @@ var randomString = function(length) {
     }
     return text;
 }
+
+app.use(session({  
+
+  secret: 'bigsecret',
+  resave: false,
+  saveUninitialized: false
+}))
 
 app.engine('.hbs', exphbs({  
   defaultLayout: 'main',
@@ -118,10 +128,16 @@ app.get('/', (req, res) => {
 })
 
 app.get('/login', (req, res) => {  
+	if(req.isAuthenticated())
+		res.redirect('/')
 	res.render('login', {
-
+		title: 'LitTix - Login'
 	})
 })
+
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                    failureRedirect: '/login',
+                                                    failureFlash: true }));
 
 
 app.get('/get-events', (req, res) => {
