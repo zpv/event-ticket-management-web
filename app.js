@@ -127,17 +127,32 @@ app.get('/get-ticket', (req, res) => {
 	query.on('end', (result) => {
 
 	var doc = new PDFDocument({
-		size: [612.00,310.00]
+		size: [612.00,280.00]
 	})
 
 	var e = req.events.find(function(s){
 		return s.id = req.query.id
 	})
 
+	var date = new Date(0);
+	date.setUTCSeconds(e.date)
+
 	var img = QRCode.toDataURL('CODE' + code, (err, url) => {
-		doc.fontSize(25).text('Name: ' + req.query.name, 100, 80);
-		doc.fontSize(25).text(e.name, 100, 50);
-		doc.image(url, 100, 100)
+		doc.image('public/img/afterparty.png', -50, 100, {
+		   fit: [300, 300]
+		});
+		
+		doc.image(url, 450, 65, {
+			fit: [150, 150]
+		})
+		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25)
+		.text('Event: nwHacks After Party', 40, 30)
+   		.text('Date: ' + date.toLocaleString())
+   		.text('Ticketholder: Steven')
+
+   		//doc.font('public/fonts/OpenSans-Regular.ttf').fontSize(18).text('Admit one - General Admission', 200, 180)
+
+
 		doc.end()
 		var stream = doc.pipe(res)
 
