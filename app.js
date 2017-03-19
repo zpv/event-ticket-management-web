@@ -148,6 +148,28 @@ app.get('/get-tickets', (req, res) => {
 	res.json(req.tickets)
 })
 
+app.get('/clear-tickets', (req, res) => {
+	pg.connect(config, function (err, client, done) {
+		var finish = function () {
+			done();
+			res.json({'complete': true})
+		};
+
+		if (err) {
+			console.error('could not connect to cockroachdb', err);
+			finish();
+		}
+
+
+		query = client.query('TRUNCATE TABLE event.tickets')
+
+
+		query.on('end', (result) => {
+			finish();
+		})
+	})
+})
+
 app.get('/purchase-tickets', (req, res) => {  
 	var e = req.events.find(function(s){
 		return s.id == req.query.id
