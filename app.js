@@ -85,7 +85,8 @@ app.get('/', (req, res) => {
 	res.render('home', {
 		id: req.query.id,
 		events: req.events,
-		title: 'LitTix - Local Events'
+		title: 'LitTix - Local Events',
+		active: {home: true}
 	})
 })
 
@@ -121,7 +122,7 @@ app.get('/get-ticket', (req, res) => {
 	var code = randomString(8)
 
 	var query = client.query('INSERT INTO event.tickets (eventID, code, name, used) VALUES($1, $2, $3, $4)',
-		[req.query.id, code, req.query.fname + req.query.lname, false])
+		[req.query.id, code, req.query.name, false])
 
 	query.on('end', (result) => {
 
@@ -134,7 +135,7 @@ app.get('/get-ticket', (req, res) => {
 	})
 
 	var img = QRCode.toDataURL('CODE' + code, (err, url) => {
-		doc.fontSize(25).text('Name: ' + req.query.fname + req.query.lname, 100, 80);
+		doc.fontSize(25).text('Name: ' + req.query.name, 100, 80);
 		doc.fontSize(25).text(e.name, 100, 50);
 		doc.image(url, 100, 100)
 		doc.end()

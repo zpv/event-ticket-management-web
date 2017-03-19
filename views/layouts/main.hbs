@@ -30,7 +30,8 @@
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="/">Home</a></li>
+            <li role="presentation" class="{{#if active.home}}active{{/if}}"><a href="/">Events</a></li>
+            <li role="presentation" class="{{#if active.about}}active{{/if}}"><a href="/">About</a></li>
           </ul>
         </nav>
         <h3 class="text-muted">LitTix</h3>
