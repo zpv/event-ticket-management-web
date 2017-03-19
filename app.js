@@ -69,6 +69,11 @@ app.use('/', (req, res, next) => {
 
 
 		query.on('end', (result) => {
+			result.rows.forEach(function(i){
+				console.log(i)
+				i.price = ((i.price/100).toFixed( 2 ))
+				console.log(i.price)
+			})
 			req.events = result.rows;
 			finish();
 		})
@@ -76,11 +81,7 @@ app.use('/', (req, res, next) => {
 })
 
 app.get('/', (req, res) => {  
-	req.events.forEach(function(i){
-		console.log(i)
-		i.price = ((i.price/100).toFixed( 2 ))
-		console.log(i.price)
-	})
+
 	res.render('home', {
 		id: req.query.id,
 		events: req.events
@@ -92,22 +93,49 @@ app.get('/get-events', (req, res) => {
 })
 
 app.get('/purchase-tickets', (req, res) => {  
-	console.log(req.events)
-  res.render('purchase', {
-    id: req.query.id,
-    events: req.events
-  })
+	var e = req.events.find(function(s){
+		return s.id = req.query.id
+	})
+
+	console.log(e)
+	res.render('home', {
+		event: e,
+		layout: 'purchase'
+	})
 })
 
 app.get('/get-ticket', (req, res) => {
+	pg.connect(config, function (err, client, done) {
+
+
+		console.log("connecting wow")
+		var finish = function () {
+			done();
+		};
+
+		if (err) {
+			console.error('could not connect to cockroachdb', err);
+			finish();
+		}
+	var code = randomString(8)
+
+	var query = client.query('INSERT INTO event.tickets (eventID, code, name, used) VALUES($1, $2, $3, $4)',
+		[req.query.id, code, req.query.fname + req.query.lname, false])
+
+	query.on('end', (result) => {
 
 	var doc = new PDFDocument({
 		size: [612.00,310.00]
 	})
 
-	var img = QRCode.toDataURL('CODEedrftgyh', (err, url) => {
-		doc.fontSize(25).text('Name: Matt Zheng', 100, 80);
-		doc.image(url)
+	var e = req.events.find(function(s){
+		return s.id = req.query.id
+	})
+
+	var img = QRCode.toDataURL('CODE' + code, (err, url) => {
+		doc.fontSize(25).text('Name: ' + req.query.fname + req.query.lname, 100, 80);
+		doc.fontSize(25).text(e.name, 100, 50);
+		doc.image(url, 100, 100)
 		doc.end()
 		var stream = doc.pipe(res)
 
@@ -116,10 +144,12 @@ app.get('/get-ticket', (req, res) => {
 		})
 	})
 
+	finish();
+
 	
 	//doc.image(img)
 
-})
+})})})
 
 app.post('/scan-ticket', (req, res) => {
 	var id = req.body.code

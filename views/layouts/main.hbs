@@ -39,7 +39,7 @@
       <div class="jumbotron" style="background-image: url(/img/{{this.image}});">
         <h1>{{this.name}}</h1>
         <p class="lead">{{this.description}}</br>Tickets starting at ${{this.price}} each</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Purchase Tickets</a></p>
+        <p><form action="/purchase-tickets"><button id="submit-{{@index}}" type="submit" name="id" value="{{this.id}}"class="btn btn-lg btn-success" href="#" role="button">Purchase Tickets</button></p></form>
       </div>
       {{/each}}
 <!--
