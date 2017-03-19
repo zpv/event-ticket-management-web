@@ -14,6 +14,9 @@ const QRCode = require('qrcode')
 
 const app = express()
 
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+
 var config = {
   user: 'nwhacks',
   host: '35.161.247.157',
@@ -40,21 +43,38 @@ app.set('view engine', '.hbs')
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static(path.join(__dirname, 'public')))
-
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-/**bodyParser.json(options)
- * Parses the text as JSON and exposes the resulting object on req.body.
- */
 app.use(bodyParser.json());
+
+const user = {  
+  username: 'steven',
+  password: 'test',
+  id: 1
+}
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    findUser(username, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (password !== user.password) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
+
+
 
 app.use('/', (req, res, next) => {
 	pg.connect(config, function (err, client, done) {
-
-
-		console.log("connecting wow")
 		var finish = function () {
 			done();
 			next();
@@ -75,6 +95,13 @@ app.use('/', (req, res, next) => {
 				console.log(i.price)
 			})
 			req.events = result.rows;
+		})
+
+		query = client.query('SELECT * FROM tickets')
+
+
+		query.on('end', (result) => {
+			req.tickets = result.rows;
 			finish();
 		})
 	})
@@ -90,8 +117,19 @@ app.get('/', (req, res) => {
 	})
 })
 
+app.get('/login', (req, res) => {  
+	res.render('login', {
+
+	})
+})
+
+
 app.get('/get-events', (req, res) => {
 	res.json(req.events)
+})
+
+app.get('/get-tickets', (req, res) => {
+	res.json(req.tickets)
 })
 
 app.get('/purchase-tickets', (req, res) => {  
