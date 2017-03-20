@@ -207,7 +207,7 @@ app.get('/get-ticket', (req, res) => {
 	})
 
 	var e = req.events.find(function(s){
-		return s.id = req.query.id
+		return s.id == req.query.id
 	})
 
 	var date = new Date(0);
