@@ -186,7 +186,7 @@ app.get('/get-ticket', (req, res) => {
 	var id = req.query.id
 
 	console.log(id)
-	if (!id){
+	if (!id || isNaN(id)){
 		return res.json({'response':0,
 						 'msg': "sad react only - no id"})}
 
