@@ -183,6 +183,13 @@ app.get('/purchase-tickets', (req, res) => {
 })
 
 app.get('/get-ticket', (req, res) => {
+	var id = req.body.code
+
+	console.log(id)
+	if (!id){
+		return res.json({'response':0,
+						 'msg': "sad react only"})}
+
 	pg.connect(config, function (err, client, done) {
 
 
@@ -209,6 +216,11 @@ app.get('/get-ticket', (req, res) => {
 	var e = req.events.find(function(s){
 		return s.id == req.query.id
 	})
+
+	if (typeof e === undefined) {
+		return res.json({'response':0,
+						 'msg': "sad react only"})
+	}
 
 	var date = new Date(0);
 	date.setUTCSeconds(e.date)
