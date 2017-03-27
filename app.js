@@ -203,17 +203,7 @@ app.get('/get-ticket', (req, res) => {
 			finish();
 		}
 	var code = randomString(8)
-
-	var query = client.query('INSERT INTO event.tickets (eventID, code, name, used) VALUES($1, $2, $3, $4)',
-		[req.query.id, code, req.query.name, false])
-
-	query.on('end', (result) => {
-
-	var doc = new PDFDocument({
-		size: [612.00,280.00]
-	})
-
-	var e = req.events.find(function(s){
+		var e = req.events.find(function(s){
 		return s.id == id
 	})
 
@@ -221,28 +211,45 @@ app.get('/get-ticket', (req, res) => {
 		return res.json({'response':0,
 						 'msg': "sad react only - null event"})
 
+	var query = client.query('INSERT INTO event.tickets (eventID, code, name, used) VALUES($1, $2, $3, $4)',
+		[req.query.id, code, req.query.name, false])
+
+	query.on('end', (result) => {
+
+	var doc = new PDFDocument({
+		size: [612.00,240.00]
+	})
+
+
+
 	var date = new Date(0);
 	date.setUTCSeconds(e.date)
 
 	var img = QRCode.toDataURL('CODE' + code, (err, url) => {
 		doc.info.Title = e.name + " Printable Ticket - " + req.query.name 
-		doc.image('public/img/afterparty.png', -50, 100, {
-		   fit: [300, 300]
+		doc.image('public/img/diner.jpg', 0, 0, {
+		   fit:[700,243]
 		});
 		
-		doc.image(url, 450, 65, {
+		doc.image(url, 455, 45, {
 			fit: [150, 150]
 		})
-		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25)
-		.text(e.name, 40, 30)
-   		.text('Date: ' + date.toLocaleString())
-   		.text('Ticketholder: ' + req.query.name)
+		//doc.save()
+		//doc.save()
+		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25).text('Ticketholder: ' + req.query.name, 0, 100)
+		//doc.restore()
+		//doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25).text('Ticketholder: ' + req.query.name)
+		//doc.restore()
+		//.text(e.name, 40, 30)
+   		//.text('Date: ' + date.toLocaleString())
+   		//
 
    		//doc.font('public/fonts/OpenSans-Regular.ttf').fontSize(18).text('Admit one - General Admission', 200, 180)
 
 
 		doc.end()
 		var stream = doc.pipe(res)
+		var stream2 = doc.pipe(fs.createWriteStream('public/tickets/' + req.query.name.split(' ').join('_')	 + '-' + e.name.split(' ').join('_') + ' ' + code + '.pdf'))
 
 		stream.on('finish', function(){
 			console.log('PDF Closed')
@@ -277,7 +284,7 @@ app.post('/scan-ticket', (req, res) => {
 	    finish();
 	  }
 
-	  var query = client.query('SELECT * FROM tickets WHERE code=\'' + id +'\'')
+	  var query = client.query('SELECT * FROM tickets WHERE code=$1',[id])
 
 
 
@@ -293,7 +300,8 @@ app.post('/scan-ticket', (req, res) => {
 		  	} else {
 		  		results.response = 1
 		  		results.msg = "Ticket has been successfully registered."
-		  		client.query('UPDATE tickets SET used=true WHERE code=\'' + id + '\'')
+		  		results.name = ticket.name;
+		  		client.query('UPDATE tickets SET used=true WHERE code=$1',[id])
 		  	}
 		  } else {
 		  	results.response = 0
