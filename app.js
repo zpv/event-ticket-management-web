@@ -107,7 +107,7 @@ app.use('/', (req, res, next) => {
 			req.events = result.rows;
 		})
 
-		query = client.query('SELECT * FROM tickets')
+		query = client.query('SELECT * FROM tickets ORDER BY name')
 
 
 		query.on('end', (result) => {
