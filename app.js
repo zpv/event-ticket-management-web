@@ -217,7 +217,8 @@ app.get('/get-ticket', (req, res) => {
 	query.on('end', (result) => {
 
 	var doc = new PDFDocument({
-		size: [612.00,240.00]
+		size: [612.00,240.00],
+		margin: 0
 	})
 
 
@@ -236,7 +237,10 @@ app.get('/get-ticket', (req, res) => {
 		})
 		//doc.save()
 		//doc.save()
-		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25).text('Ticketholder: ' + req.query.name, 0, 100)
+		doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(12).text('Ticketholder: ' + req.query.name, 65, 150, {
+			align: 'center',
+			width: 400
+		})
 		//doc.restore()
 		//doc.font('public/fonts/OpenSans-Bold.ttf').fontSize(25).text('Ticketholder: ' + req.query.name)
 		//doc.restore()
@@ -295,7 +299,7 @@ app.post('/scan-ticket', (req, res) => {
 		var results = {};
 		if(ticket) {
 		  	if(ticket.used){
-		  		results.response = 0
+		  		results.response = 2
 		  		results.msg = "Ticket has already been used."
 		  	} else {
 		  		results.response = 1
