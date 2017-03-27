@@ -147,7 +147,7 @@ app.get('/get-events', (req, res) => {
 app.get('/get-tickets', (req, res) => {
 	res.json(req.tickets)
 })
-
+/*
 app.get('/clear-tickets', (req, res) => {
 	pg.connect(config, function (err, client, done) {
 		var finish = function () {
@@ -168,7 +168,7 @@ app.get('/clear-tickets', (req, res) => {
 			finish();
 		})
 	})
-})
+})*/
 
 app.get('/purchase-tickets', (req, res) => {  
 	var e = req.events.find(function(s){
@@ -301,6 +301,7 @@ app.post('/scan-ticket', (req, res) => {
 		  	if(ticket.used){
 		  		results.response = 2
 		  		results.msg = "Ticket has already been used."
+
 		  	} else {
 		  		results.response = 1
 		  		results.msg = "Ticket has been successfully registered."
